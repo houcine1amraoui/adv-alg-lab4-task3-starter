@@ -29,13 +29,16 @@ class AVL:
              y     T4   ---->               x     z
            /   \                          /  \   / \
           x     T3                       T1  T2 T3 T4
+         / \                          
+        T1 T2                    
         """
+        # Store references
         y = z.left
         T3 = y.right
 
         # Perform rotation
-        y.right = z
-        z.left = T3
+        y.right = z # y becomes new root
+        z.left = T3 # z becomes right child of y, T3 becomes left child of z
 
         # Update heights
         z.height = 1 + max(self.get_height(z.left), self.get_height(z.right))
@@ -51,7 +54,10 @@ class AVL:
          T1    y       ----->                z     x
               /  \                          / \   / \
              T2   x                        T1 T2 T3 T4
+                 / \
+                T3 T4                        
         """
+        # Store references
         y = z.right
         T2 = y.left
 
@@ -68,54 +74,34 @@ class AVL:
     # AVL Insert (Recursive)
     def insert(self, value):
         def _insert(node, value):
-            # 1. Perform a normal BST insertion
-            #    - If the current root is empty:
-            #          → create a new node and return it
-            #
-            #    - Otherwise:
-            #          → if value is smaller, insert into LEFT subtree
-            #          → if value is larger, insert into RIGHT subtree
-            #
-            #    - After inserting, update root.left or root.right accordingly
-            # -------------------------------
+            # 1. Normal BST insertion
 
-            # -------------------------------
-            # 2. Update the height of the current root
-            #    height = 1 + max(height(left subtree), height(right subtree))
-            # -------------------------------
+            # 2. Update height of this node
+            
 
-            # -------------------------------
-            # 3. Compute the balance factor of this node
-            #    balance = height(left subtree) - height(right subtree)
-            # -------------------------------
+            # 3. Compute balance factor
+            
 
-            # -------------------------------
-            # 4. Check the 4 imbalance cases and apply rotations
-            #
-            #   Case 1: Left-Left imbalance
-            #       - balance > 1
-            #       - value was inserted in LEFT subtree of LEFT child
-            #       → perform RIGHT rotation on root
-            #
-            #   Case 2: Right-Right imbalance
-            #       - balance < -1
-            #       - value was inserted in RIGHT subtree of RIGHT child
-            #       → perform LEFT rotation on root
-            #
-            #   Case 3: Left-Right imbalance
-            #       - balance > 1
-            #       - value inserted in RIGHT subtree of LEFT child
-            #       → rotate LEFT on left child, then RIGHT on root
-            #
-            #   Case 4: Right-Left imbalance
-            #       - balance < -1
-            #       - value inserted in LEFT subtree of RIGHT child
-            #       → rotate RIGHT on right child, then LEFT on root
-            # -------------------------------
+            # 4. Rotation cases
 
-            # -------------------------------
-            # 5. Return the (possibly rotated) root node
-            # -------------------------------
-            pass
+            # Case 1: Left Left
+            if balance > 1 and value < node.left.value:
+                return self.rotate_right(node)
+
+            # Case 2: Right Right
+            if balance < -1 and value > node.right.value:
+                return self.rotate_left(node)
+
+            # Case 3: Left Right
+            if balance > 1 and value > node.left.value:
+                node.left = self.rotate_left(node.left)
+                return self.rotate_right(node)
+
+            # Case 4: Right Left
+            if balance < -1 and value < node.right.value:
+                node.right = self.rotate_right(node.right)
+                return self.rotate_left(node)
+
+            return node  # return (possibly updated) subtree root
+
         self.root = _insert(self.root, value)
-
