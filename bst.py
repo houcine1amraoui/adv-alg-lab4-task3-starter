@@ -24,5 +24,3 @@ class BST:
         # Start insertion from the root
         # Update the root since the recursive function returns a subtree
         pass
-
-
